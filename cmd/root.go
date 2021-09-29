@@ -12,7 +12,7 @@ import (
 var cfgFile string
 
 var rootCmd = &cobra.Command{
-    Use:   "lest-go-company",
+    Use:   "lets-go-company",
     Short: "A brief description of your application",
 }
 
@@ -26,7 +26,7 @@ func Execute() {
 func init() {
     cobra.OnInitialize(initConfig)
 
-    rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.lest-go-company.yaml)")
+    rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.lets-go-company.yaml)")
 
     rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
@@ -42,7 +42,7 @@ func initConfig() {
         }
 
         viper.AddConfigPath(home)
-        viper.SetConfigName(".lest-go-company")
+        viper.SetConfigName(".lets-go-company")
     }
 
     viper.AutomaticEnv()

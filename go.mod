@@ -1,4 +1,4 @@
-module github.com/dinhtp/lets-go/lets-go-company
+module github.com/dinhtp/lets-go-company
 
 go 1.14
 

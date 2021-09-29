@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dinhtp/lest-go-company/cmd"
+import "github.com/dinhtp/lets-go-company/cmd"
 
 func main() {
     cmd.Execute()
