@@ -10,7 +10,7 @@ test: install
 	go test ./...
 
 build: install
-	go build -ldflags "-X main.version=$(TAG)" -o ./bin/go-company-service.
+	go build -ldflags "-X main.version=$(TAG)" -o ./bin/go-company-service .
 
 serve: build
 	./bin/go-company-service serve grpc
