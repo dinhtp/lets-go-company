@@ -13,7 +13,7 @@ var cfgFile string
 
 var rootCmd = &cobra.Command{
     Use:   "lets-go-company",
-    Short: "A brief description of your application",
+    Short: "go company service root command",
 }
 
 func Execute() {

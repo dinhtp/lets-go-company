@@ -1,19 +1,19 @@
 package cmd
 
 import (
-	"fmt"
+    "fmt"
 
-	"github.com/spf13/cobra"
+    "github.com/spf13/cobra"
 )
 
 var serveCmd = &cobra.Command{
-	Use:   "serve",
-	Short: "A brief description of your command",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
-	},
+    Use:   "serve",
+    Short: "go company service serve command",
+    Run: func(cmd *cobra.Command, args []string) {
+        fmt.Println("go company service serve command called")
+    },
 }
 
 func init() {
-	rootCmd.AddCommand(serveCmd)
+    rootCmd.AddCommand(serveCmd)
 }
