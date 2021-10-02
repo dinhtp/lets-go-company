@@ -22,9 +22,9 @@ var seedCmd = &cobra.Command{
 func init() {
     migrationCmd.AddCommand(seedCmd)
 
-    migrateCmd.Flags().StringP("mysqlDsn", "m", "mysqlDsn", "mysql connection string")
+    seedCmd.Flags().StringP("mysqlDsn", "m", "mysqlDsn", "mysql connection string")
 
-    _ = viper.BindPFlag("mysqlDsn", migrateCmd.Flags().Lookup("mysqlDsn"))
+    _ = viper.BindPFlag("mysqlDsn", seedCmd.Flags().Lookup("mysqlDsn"))
 }
 
 func runSeedCommand(cmd *cobra.Command, args []string) {

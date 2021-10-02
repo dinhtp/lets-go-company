@@ -10,10 +10,10 @@ import (
 type Company struct {
     gorm.Model
     Name      string `faker:"domain_name"`
-    Phone     string `faker:"phone_number"`
+    Phone     string `faker:"toll_free_number"`
     Email     string `faker:"email"`
     Address   string `faker:"sentence"`
-    TaxNumber string `faker:"toll_free_number"`
+    TaxNumber string `faker:"phone_number"`
 }
 
 func FakeCompany() (Company, error) {
@@ -23,6 +23,7 @@ func FakeCompany() (Company, error) {
 
     company.CreatedAt = time.Now()
     company.UpdatedAt = time.Now()
+    company.DeletedAt = gorm.DeletedAt{}
 
     return company, err
 
