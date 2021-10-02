@@ -3,6 +3,7 @@ package company
 import (
     "context"
     "gorm.io/gorm"
+    "strconv"
 
     "github.com/gogo/protobuf/types"
 
@@ -27,7 +28,18 @@ func (s Service) Update(ctx context.Context, r *pb.Company) (*pb.Company, error)
 }
 
 func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company, error) {
-    return &pb.Company{}, nil
+    if err := validateOne(r); nil != err {
+        return nil, err
+    }
+
+    id , _ := strconv.Atoi(r.GetId())
+
+    company, err := NewRepository(s.db).FindOne(id)
+    if nil != err {
+        return nil, err
+    }
+
+    return prepareDataToResponse(company), nil
 }
 
 func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCompanyResponse, error) {

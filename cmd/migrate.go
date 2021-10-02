@@ -20,7 +20,7 @@ var migrateCmd = &cobra.Command{
 }
 
 func init() {
-    migrateCmd.AddCommand(migrateCmd)
+    migrationCmd.AddCommand(migrateCmd)
 
     migrateCmd.Flags().StringP("mysqlDsn", "m", "mysqlDsn", "mysql connection string")
 
