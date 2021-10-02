@@ -6,16 +6,16 @@ import (
     "os"
     "time"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"gorm.io/driver/mysql"
+    "github.com/spf13/cobra"
+    "github.com/spf13/viper"
+    "gorm.io/driver/mysql"
 
-	"github.com/dinhtp/lets-go-company/migration/seeder"
+    "github.com/dinhtp/lets-go-company/migration/seeder"
 )
 
 var seedCmd = &cobra.Command{
     Use:   "seed",
-    Short: "A brief description of your command",
+    Short: "go company service seed command",
     Run:   runSeedCommand,
 }
 
