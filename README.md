@@ -15,15 +15,17 @@ The company and employee Pbtype can be referred below:
 * Bring up the service by Docker compose.
 * Execute Migration and Seeding successfully.
 * Expose company API resources endpoint which includes:
-    * Create a company
-    * Get a company by id
-    * Update a company by id
-    * Delete a company by id
-    * list a company by page and limit
+    * Create a company.
+    * Get a company by an id.
+    * Update a company by an id.
+    * Delete a company by an id.
+    * list a company by page and limit.
 * Expose employee API resources endpoint which includes:
-    * Create an employee for a specific company
-    * Get an employee by id
-    * Update an employee by id
-    * Delete an employee by id
-    * list employee by company id, page and limit
-* Calculate the current total employee of a company
+    * Create an employee for a specific company.
+    * Get an employee by an id.
+    * Update an employee by an id.
+    * Delete an employee by an id.
+    * list employee by company id, page and limit.
+* Calculate the current total employee of a company.
+
+> NOTE: DO NOT commit changes directly into the master branch.
