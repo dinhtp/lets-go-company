@@ -2,6 +2,10 @@ module github.com/dinhtp/lets-go-company
 
 go 1.14
 
+replace (
+	 github.com/dinhtp/lets-go-pbtype => ../lets-go-pbtype
+)
+
 require (
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/dinhtp/lets-go-pbtype v0.0.0-20211001161303-f563aacac732

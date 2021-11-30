@@ -11,4 +11,5 @@ type Company struct {
     Email     string
     Address   string
     TaxNumber string
+    //Employees []Employee
 }

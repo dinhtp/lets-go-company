@@ -9,11 +9,17 @@ import (
 )
 
 func Migrate(db *gorm.DB) error {
+	db = db.Debug()
+
     m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
         {
             ID:      "20211002000000",
             Migrate: versions.Version20211002000000,
         },
+		{
+			ID:      "20211122175000",
+			Migrate: versions.Version20211122175000,
+		},
     })
 
     return m.Migrate()
