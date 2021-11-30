@@ -14,5 +14,3 @@ type Employee struct {
 	Gender    string
 	Role      string
 }
-
-
