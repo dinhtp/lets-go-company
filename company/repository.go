@@ -74,17 +74,19 @@ func (r *Repository) ListAll(rq *pb.ListCompanyRequest) ([]*model.Company, error
 		if err := query.Error; nil != err {
 			return nil, err
 		}
-	} else {
-		str = str + split[0] + " like " + "'%" + fmt.Sprintf("%s", searchValue) + "%'"
-		if len(split) > 1 {
-			for i := 1; i < len(split); i++ {
-				str = str + " OR " + split[i] + " like " + "'%" + fmt.Sprintf("%s", searchValue) + "%'"
-			}
+		return list, nil
+	}
+	str = str + split[0] + " like " + "'%" + fmt.Sprintf("%s", searchValue) + "%'"
+	if len(split) > 1 {
+		for i := 1; i < len(split); i++ {
+			str = str + " OR " + split[i] + " like " + "'%" + fmt.Sprintf("%s", searchValue) + "%'"
 		}
-		query := r.db.Model(&model.Company{}).Where(str).Limit(limit).Offset(offset).Find(&list)
-		if err := query.Error; nil != err {
-			return nil, err
-		}
+	}
+	query := r.db.Model(&model.Company{}).Where(str).Limit(limit).Offset(offset).Find(&list)
+	if err := query.Error; nil != err {
+		return nil, err
 	}
 	return list, nil
 }
+
+
