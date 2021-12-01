@@ -4,9 +4,10 @@ import (
     "context"
     "strconv"
 
-    pb "github.com/dinhtp/lets-go-pbtype/company"
     "github.com/gogo/protobuf/types"
     "gorm.io/gorm"
+
+    pb "github.com/dinhtp/lets-go-pbtype/company"
 )
 
 type Service struct {
@@ -67,19 +68,20 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
         return nil, err
     }
 
-    company,count, err := NewRepository(s.db).ListAll(r)
-    for i := 0; i < len(company); i++ {
-        list = append(list, prepareDataToResponse(company[i]))
-    }
+    company, count, err := NewRepository(s.db).ListAll(r)
+
     if nil != err {
         return nil, err
     }
+    for i := 0; i < len(company); i++ {
+        list = append(list, prepareDataToResponse(company[i]))
+    }
 
     return &pb.ListCompanyResponse{
-        Items: list,
-        Page:  r.GetPage(),
+        Items:      list,
+        Page:       r.GetPage(),
         TotalCount: uint32(count),
-        Limit: r.GetLimit(),
+        Limit:      r.GetLimit(),
     }, nil
 }
 

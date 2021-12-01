@@ -1,8 +1,7 @@
 package versions
 
 import (
-	"time"
-
+	"google.golang.org/genproto/googleapis/type/date"
 	"gorm.io/gorm"
 )
 
@@ -12,7 +11,7 @@ func Version20211122175000(tx *gorm.DB) error {
 		CompanyID uint
 		Name      string `gorm:"TYPE:VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"`
 		Email     string `gorm:"TYPE:VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"`
-		DOB       time.Time
+		DOB       date.Date
 		Gender    string `gorm:"TYPE:VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"`
 		Role      string `gorm:"TYPE:VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"`
 	}
