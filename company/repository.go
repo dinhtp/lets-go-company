@@ -2,9 +2,11 @@ package company
 
 import (
     "fmt"
+    "strings"
+
+    "gorm.io/gorm"
     "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/company"
-    "gorm.io/gorm"
 )
 
 type Repository struct {
@@ -38,7 +40,6 @@ func (r *Repository) CreatOne(c *model.Company) (*model.Company, error) {
 }
 
 func (r *Repository) UpdateOne(id int, c *model.Company) (*model.Company, error) {
-
     query := r.db.Model(&model.Company{}).Where("id=?", id).UpdateColumns(getModel(uint(id), c))
 
     if err := query.Error; nil != err {
@@ -68,23 +69,26 @@ func (r *Repository) ListAll(rq *pb.ListCompanyRequest) ([]*model.Company, error
     var offset = limit * (page - 1)
     var str = ""
 
-    split := divideString(searchFields)
-    if len(searchFields) == 0 {
+    split := strings.Split(searchFields,",")
+    if searchFields == "" {
         query := r.db.Model(&model.Company{}).Limit(limit).Offset(offset).Find(&list)
         if err := query.Error; nil != err {
             return nil, err
         }
         return list, nil
     }
-    str = str + split[0] + " like " + "'%" + fmt.Sprintf("%s", searchValue) + "%'"
+    str1 := "'%" + fmt.Sprintf("%s", searchValue) + "%'"
+    str = fmt.Sprintf("%s LIKE %s", split[0],str1)
     if len(split) > 1 {
         for i := 1; i < len(split); i++ {
-            str = str + " OR " + split[i] + " like " + "'%" + fmt.Sprintf("%s", searchValue) + "%'"
+            str += fmt.Sprintf(" OR %s LIKE %s", split[i],str1)
         }
     }
+
     query := r.db.Model(&model.Company{}).Where(str).Limit(limit).Offset(offset).Find(&list)
     if err := query.Error; nil != err {
         return nil, err
     }
+
     return list, nil
 }

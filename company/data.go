@@ -2,11 +2,11 @@ package company
 
 import (
     "fmt"
+    "time"
+
     "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/company"
     "gorm.io/gorm"
-    "strings"
-    "time"
 )
 
 func prepareDataToResponse(c *model.Company) *pb.Company {
@@ -20,7 +20,6 @@ func prepareDataToResponse(c *model.Company) *pb.Company {
         CreatedAt: c.CreatedAt.Format(time.RFC3339),
         UpdatedAt: c.UpdatedAt.Format(time.RFC3339),
     }
-    // TODO: Calculate total employee
     return data
 }
 
@@ -52,17 +51,3 @@ func getModel(id uint, c *model.Company) *model.Company {
     }
 }
 
-func getList(l []*pb.Company, count uint32, page uint32, limit uint32) *pb.ListCompanyResponse {
-    return &pb.ListCompanyResponse{
-        Items:      l,
-        MaxPage:    0,
-        TotalCount: 0,
-        Page:       page,
-        Limit:      limit,
-    }
-}
-
-func divideString(str string) []string {
-    split := strings.Split(str, ",")
-    return split
-}

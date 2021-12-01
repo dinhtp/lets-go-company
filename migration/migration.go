@@ -2,9 +2,7 @@ package migration
 
 import (
     "gorm.io/gorm"
-
     "github.com/go-gormigrate/gormigrate/v2"
-
     "github.com/dinhtp/lets-go-company/migration/versions"
 )
 

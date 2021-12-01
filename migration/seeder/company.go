@@ -1,9 +1,9 @@
 package seeder
 
 import (
-    "gorm.io/gorm"
     "time"
 
+    "gorm.io/gorm"
     "github.com/bxcodec/faker/v3"
 )
 

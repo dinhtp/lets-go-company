@@ -2,10 +2,11 @@ package company
 
 import (
     "context"
+    "strconv"
+
+    "gorm.io/gorm"
     pb "github.com/dinhtp/lets-go-pbtype/company"
     "github.com/gogo/protobuf/types"
-    "gorm.io/gorm"
-    "strconv"
 )
 
 type Service struct {
@@ -13,6 +14,8 @@ type Service struct {
 }
 
 func NewService(db *gorm.DB) *Service {
+    db = db.Debug()
+
     return &Service{db: db}
 }
 

@@ -1,8 +1,9 @@
 package versions
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 func Version20211122175000(tx *gorm.DB) error {
