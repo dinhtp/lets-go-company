@@ -105,7 +105,7 @@ func initializeDbConnection(mysqlDsnField string, c chan os.Signal, mysqlChan ch
 }
 
 func initializeServices(orm *gorm.DB, grpcServer *grpc.Server) *grpc.Server {
-    companyService:= company.NewService(orm)
+    companyService := company.NewService(orm)
     pb.RegisterCompanyServiceServer(grpcServer, companyService)
 
     return grpcServer
