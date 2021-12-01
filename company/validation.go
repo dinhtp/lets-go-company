@@ -40,7 +40,7 @@ func validateList(r *pb.ListCompanyRequest) error {
 
     for i := 0; i < len(field); i++ {
         var newfield = strings.ToLower(strings.TrimSpace(field[i]))
-        if newfield != "name" && newfield != "phone" && newfield != "email" && newfield != "address" && newfield != "tax_number" && newfield != "" {
+        if newfield != "name" && newfield != "phone" && newfield != "email" && newfield != "address" && newfield != "tax_number" && newfield != ""{
             return status.Error(codes.InvalidArgument, "Invalid SearchFields")
         }
     }

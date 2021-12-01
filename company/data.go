@@ -4,9 +4,9 @@ import (
     "fmt"
     "time"
 
+    "gorm.io/gorm"
     "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/company"
-    "gorm.io/gorm"
 )
 
 func prepareDataToResponse(c *model.Company) *pb.Company {

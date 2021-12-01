@@ -4,9 +4,9 @@ import (
     "context"
     "strconv"
 
-    "gorm.io/gorm"
     pb "github.com/dinhtp/lets-go-pbtype/company"
     "github.com/gogo/protobuf/types"
+    "gorm.io/gorm"
 )
 
 type Service struct {
@@ -14,8 +14,6 @@ type Service struct {
 }
 
 func NewService(db *gorm.DB) *Service {
-    db = db.Debug()
-
     return &Service{db: db}
 }
 
@@ -69,7 +67,7 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
         return nil, err
     }
 
-    company, err := NewRepository(s.db).ListAll(r)
+    company,count, err := NewRepository(s.db).ListAll(r)
     for i := 0; i < len(company); i++ {
         list = append(list, prepareDataToResponse(company[i]))
     }
@@ -80,6 +78,7 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
     return &pb.ListCompanyResponse{
         Items: list,
         Page:  r.GetPage(),
+        TotalCount: uint32(count),
         Limit: r.GetLimit(),
     }, nil
 }
@@ -90,7 +89,7 @@ func (s Service) Delete(ctx context.Context, r *pb.OneCompanyRequest) (*types.Em
     }
 
     id, _ := strconv.Atoi(r.GetId())
-    _, err := NewRepository(s.db).DeleteOne(id)
+    err := NewRepository(s.db).DeleteOne(id)
     if nil != err {
         return nil, err
     }

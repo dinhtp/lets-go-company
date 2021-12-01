@@ -49,20 +49,21 @@ func (r *Repository) UpdateOne(id int, c *model.Company) (*model.Company, error)
     return c, nil
 }
 
-func (r *Repository) DeleteOne(id int) (*model.Company, error) {
+func (r *Repository) DeleteOne(id int) (error) {
     var result model.Company
 
     query := r.db.Model(&model.Company{}).Where("id=?", id).Delete(&result)
     if err := query.Error; nil != err {
-        return nil, err
+        return err
     }
 
-    return &result, nil
+    return nil
 }
 
-func (r *Repository) ListAll(rq *pb.ListCompanyRequest) ([]*model.Company, error) {
+func (r *Repository) ListAll(rq *pb.ListCompanyRequest) ([]*model.Company, int64, error) {
     var list []*model.Company
     var limit = int(rq.GetLimit())
+    var count int64
     var page = int(rq.GetPage())
     var searchFields = rq.GetSearchField()
     var searchValue = rq.GetSearchValue()
@@ -71,13 +72,13 @@ func (r *Repository) ListAll(rq *pb.ListCompanyRequest) ([]*model.Company, error
 
     split := strings.Split(searchFields,",")
     if searchFields == "" {
-        query := r.db.Model(&model.Company{}).Limit(limit).Offset(offset).Find(&list)
+        query := r.db.Model(&model.Company{}).Limit(limit).Offset(offset).Find(&list).Count(&count)
         if err := query.Error; nil != err {
-            return nil, err
+            return nil,0, err
         }
-        return list, nil
+        return list,count, nil
     }
-    str1 := "'%" + fmt.Sprintf("%s", searchValue) + "%'"
+    str1 := fmt.Sprintf("'%%%s%%'", searchValue)
     str = fmt.Sprintf("%s LIKE %s", split[0],str1)
     if len(split) > 1 {
         for i := 1; i < len(split); i++ {
@@ -85,10 +86,10 @@ func (r *Repository) ListAll(rq *pb.ListCompanyRequest) ([]*model.Company, error
         }
     }
 
-    query := r.db.Model(&model.Company{}).Where(str).Limit(limit).Offset(offset).Find(&list)
+    query := r.db.Model(&model.Company{}).Where(str).Limit(limit).Offset(offset).Find(&list).Count(&count)
     if err := query.Error; nil != err {
-        return nil, err
+        return nil,0, err
     }
 
-    return list, nil
+    return list,count, nil
 }
