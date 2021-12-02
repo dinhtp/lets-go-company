@@ -56,6 +56,7 @@ func validateList(r *pb.ListCompanyRequest) error {
     if  r.GetSearchField() == "" && r.GetSearchValue() ==""{
         return nil
     }
+
     for i := 0; i < len(field); i++ {
         var newfield = strings.ToLower(strings.TrimSpace(field[i]))
         if newfield != "name" && newfield != "phone" && newfield != "email" && newfield != "address" && newfield != "tax_number" && newfield != "" {
