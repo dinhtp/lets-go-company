@@ -1,10 +1,10 @@
 package seeder
 
 import (
-    "gorm.io/gorm"
     "time"
 
     "github.com/bxcodec/faker/v3"
+    "gorm.io/gorm"
 )
 
 type Company struct {
@@ -28,3 +28,4 @@ func FakeCompany() (Company, error) {
     return company, err
 
 }
+
