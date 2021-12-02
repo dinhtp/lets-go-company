@@ -15,7 +15,6 @@ type Service struct {
 }
 
 func NewService(db *gorm.DB) *Service {
-   db =  db.Debug()
 
     return &Service{db: db}
 }
