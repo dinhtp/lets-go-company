@@ -18,9 +18,9 @@ import (
     "gorm.io/driver/mysql"
 
     "github.com/dinhtp/lets-go-company/company"
-    pb "github.com/dinhtp/lets-go-pbtype/company"
     "github.com/dinhtp/lets-go-company/employee"
-    pb2 "github.com/dinhtp/lets-go-pbtype/employee"
+    cpb "github.com/dinhtp/lets-go-pbtype/company"
+    epb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
 var grpcCmd = &cobra.Command{
@@ -109,8 +109,9 @@ func initializeDbConnection(mysqlDsnField string, c chan os.Signal, mysqlChan ch
 func initializeServices(orm *gorm.DB, grpcServer *grpc.Server) *grpc.Server {
     companyService := company.NewService(orm)
     employeeService := employee.NewService(orm)
-    pb.RegisterCompanyServiceServer(grpcServer, companyService)
-    pb2.RegisterEmployeeServiceServer(grpcServer, employeeService)
+
+    cpb.RegisterCompanyServiceServer(grpcServer, companyService)
+    epb.RegisterEmployeeServiceServer(grpcServer, employeeService)
 
     return grpcServer
 }

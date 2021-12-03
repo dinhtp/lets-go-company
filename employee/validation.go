@@ -11,7 +11,7 @@ import (
 
 func validateOne(r *pb.OneEmployeeRequest) error {
     if "" == r.GetId() {
-        return status.Error(codes.InvalidArgument, "company id is required")
+        return status.Error(codes.InvalidArgument, "Employee ID id is required")
     }
 
     return nil
@@ -19,29 +19,33 @@ func validateOne(r *pb.OneEmployeeRequest) error {
 
 func validateUpdate(e *pb.Employee) error {
     if e.GetId() == "" {
-        return status.Error(codes.InvalidArgument, "EmployeeID is required")
+        return status.Error(codes.InvalidArgument, "Employee ID is required")
     }
+
     if e.GetCompanyId() == "" {
-        return status.Error(codes.InvalidArgument,"Invalid CompanyID")
+        return status.Error(codes.InvalidArgument,"Invalid Company ID")
     }
 
     return validateCreate(e)
 }
 
 func validateCreate(e *pb.Employee) error {
-
     if e.GetName() == "" {
         return status.Error(codes.InvalidArgument, "Name is required")
     }
+
     if e.GetEmail() == "" {
         return status.Error(codes.InvalidArgument, "Email is required")
     }
+
     if e.GetDob() == "" {
         return status.Error(codes.InvalidArgument, "Dob is required")
     }
+
     if e.GetGender() == "" {
         return status.Error(codes.InvalidArgument, "Gender is required")
     }
+
     if e.GetRole() == "" {
         return status.Error(codes.InvalidArgument, "Role is required")
     }

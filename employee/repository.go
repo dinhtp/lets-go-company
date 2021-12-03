@@ -6,8 +6,8 @@ import (
     "strings"
 
     "gorm.io/gorm"
-    "github.com/dinhtp/lets-go-company/model"
 
+    "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
@@ -16,7 +16,6 @@ type Repository struct {
 }
 
 func NewRepository(db *gorm.DB) *Repository {
-
     return &Repository{db: db}
 }
 
@@ -33,7 +32,6 @@ func (r *Repository) FindOne(id int) (*model.Employee, error) {
 }
 
 func (r *Repository) DeleteOne(id int) error {
-
     var result model.Employee
 
     query := r.db.Model(&model.Employee{}).Where("id=?", id).Delete(&result)

@@ -1,12 +1,11 @@
 package employee
 
 import (
-    "fmt"
     "context"
     "strconv"
 
-    "gorm.io/gorm"
     "github.com/gogo/protobuf/types"
+    "gorm.io/gorm"
 
     pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
@@ -25,8 +24,8 @@ func (s Service) Get(ctx context.Context, r *pb.OneEmployeeRequest) (*pb.Employe
     }
 
     id, _ := strconv.Atoi(r.GetId())
-    fmt.Println(id)
     employee, err := NewRepository(s.db).FindOne(id)
+
     if nil != err {
         return nil, err
     }
@@ -65,11 +64,13 @@ func (s Service) Update(ctx context.Context, r *pb.Employee) (*pb.Employee, erro
 
 func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListEmplyeeResponse, error) {
     var list []*pb.Employee
+    var maxPage uint32
     if err := validateList(r); nil != err {
         return nil, err
     }
 
     company, count, err := NewRepository(s.db).ListAll(r)
+
     if nil != err {
         return nil, err
     }
@@ -77,11 +78,17 @@ func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListE
         list = append(list, prepareDataToResponse(company[i]))
     }
 
+    if uint32(count) % r.GetLimit() != 0{
+        maxPage = (uint32(count)/r.GetLimit()) + 1
+    }
+    maxPage = uint32(count)/r.GetLimit()
+
     return &pb.ListEmplyeeResponse{
         Items:      list,
         TotalCount: uint32(count),
         Page:       r.GetPage(),
         Limit:      r.GetLimit(),
+        MaxPage:    maxPage,
     }, nil
 }
 
@@ -98,4 +105,3 @@ func (s Service) Delete(ctx context.Context, r *pb.OneEmployeeRequest) (*types.E
 
     return &types.Empty{}, nil
 }
-

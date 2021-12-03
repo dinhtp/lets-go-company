@@ -1,9 +1,9 @@
 package migration
 
 import (
-    "gorm.io/gorm"
-    "github.com/go-gormigrate/gormigrate/v2"
     "github.com/dinhtp/lets-go-company/migration/versions"
+    "github.com/go-gormigrate/gormigrate/v2"
+    "gorm.io/gorm"
 )
 
 func Migrate(db *gorm.DB) error {

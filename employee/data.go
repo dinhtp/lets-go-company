@@ -2,12 +2,12 @@ package employee
 
 import (
     "fmt"
-    "time"
     "strconv"
+    "time"
 
     "gorm.io/gorm"
-    "github.com/dinhtp/lets-go-company/model"
 
+    "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
@@ -28,8 +28,8 @@ func prepareDataToResponse(e *model.Employee) *pb.Employee {
 }
 
 func prepareDataToRequest(p *pb.Employee) *model.Employee {
-    companyId,_ := strconv.Atoi(p.GetCompanyId())
-    dob,_ :=  time.Parse(time.RFC3339,p.Dob)
+    companyId, _ := strconv.Atoi(p.GetCompanyId())
+    dob, _ := time.Parse(time.RFC3339, p.Dob)
 
     return &model.Employee{
         Model:     gorm.Model{},

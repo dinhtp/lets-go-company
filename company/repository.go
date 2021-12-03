@@ -4,9 +4,9 @@ import (
     "fmt"
     "strings"
 
-    "github.com/dinhtp/lets-go-company/model"
     "gorm.io/gorm"
 
+    "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/company"
 )
 
