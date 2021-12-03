@@ -1,13 +1,14 @@
-package company
+package employee
 
 import (
     "fmt"
+    "strconv"
     "strings"
 
     "github.com/dinhtp/lets-go-company/model"
     "gorm.io/gorm"
 
-    pb "github.com/dinhtp/lets-go-pbtype/company"
+    pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
 type Repository struct {
@@ -15,14 +16,15 @@ type Repository struct {
 }
 
 func NewRepository(db *gorm.DB) *Repository {
+    db = db.Debug()
 
     return &Repository{db: db}
 }
 
-func (r *Repository) FindOne(id int) (*model.Company, error) {
-    var result model.Company
+func (r *Repository) FindOne(id int) (*model.Employee, error) {
+    var result model.Employee
 
-    query := r.db.Model(&model.Company{}).Where("id = ?", id).First(&result)
+    query := r.db.Model(&model.Employee{}).Where("id = ?", id).First(&result)
 
     if err := query.Error; nil != err {
         return nil, err
@@ -31,30 +33,11 @@ func (r *Repository) FindOne(id int) (*model.Company, error) {
     return &result, nil
 }
 
-func (r *Repository) CreatOne(c *model.Company) (*model.Company, error) {
-    query := r.db.Model(&model.Company{}).Create(c)
-
-    if err := query.Error; nil != err {
-        return nil, err
-    }
-
-    return c, nil
-}
-
-func (r *Repository) UpdateOne(id int, c *model.Company) (*model.Company, error) {
-    query := r.db.Model(&model.Company{}).Where("id=?", id).UpdateColumns(getModel(uint(id), c))
-
-    if err := query.Error; nil != err {
-        return nil, err
-    }
-
-    return c, nil
-}
-
 func (r *Repository) DeleteOne(id int) error {
-    var result model.Company
 
-    query := r.db.Model(&model.Company{}).Where("id=?", id).Delete(&result)
+    var result model.Employee
+
+    query := r.db.Model(&model.Employee{}).Where("id=?", id).Delete(&result)
     if err := query.Error; nil != err {
         return err
     }
@@ -62,13 +45,35 @@ func (r *Repository) DeleteOne(id int) error {
     return nil
 }
 
-func (r *Repository) ListAll(req *pb.ListCompanyRequest) ([]*model.Company, int64, error) {
+func (r *Repository) UpdateOne(id int, e *model.Employee) (*model.Employee, error) {
+    query := r.db.Model(&model.Employee{}).Where("id=?", id).UpdateColumns(getModel(uint(id), e))
+
+    if err := query.Error; nil != err {
+        return nil, err
+    }
+
+    return e, nil
+}
+
+func (r *Repository) CreatOne(e *model.Employee) (*model.Employee, error) {
+    query := r.db.Model(&model.Employee{}).Create(e)
+
+    if err := query.Error; nil != err {
+        return nil, err
+    }
+
+    return e, nil
+}
+
+func (r *Repository) ListAll(req *pb.ListEmployeeRequest) ([]*model.Employee, int64, error) {
     var count int64
-    var list []*model.Company
+    var list []*model.Employee
 
     sql := ""
+    //sql2 := ""
     limit := int(req.GetLimit())
     offset := limit * int(req.GetPage()-1)
+    companyid, _ := strconv.Atoi(req.GetCompanyid())
 
     if req.GetSearchField() != "" && req.GetSearchValue() != "" {
         searchFields := strings.Split(req.GetSearchField(), ",")
@@ -83,8 +88,13 @@ func (r *Repository) ListAll(req *pb.ListCompanyRequest) ([]*model.Company, int6
         }
     }
 
-    listQuery := r.db.Model(&model.Company{}).Select("*")
-    countQuery := r.db.Model(&model.Company{}).Select("id")
+    listQuery := r.db.Model(&model.Employee{}).Select("*")
+    countQuery := r.db.Model(&model.Employee{}).Select("id")
+
+    if req.GetCompanyid() != "" {
+        listQuery = listQuery.Where("company_id = ?", uint(companyid))
+        countQuery = countQuery.Where("company_id = ?", uint(companyid))
+    }
 
     if sql != "" {
         countQuery = countQuery.Where(sql)
