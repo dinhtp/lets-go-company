@@ -64,10 +64,6 @@ func validateList(e *pb.ListEmployeeRequest) error  {
         return status.Error(codes.InvalidArgument, "Invalid Limit")
     }
 
-    if e.GetCompanyId() == "" {
-        return status.Error(codes.InvalidArgument, "Invalid CompanyId")
-    }
-
     if  e.GetSearchField() == "" && e.GetSearchValue() ==""{
         return nil
     }

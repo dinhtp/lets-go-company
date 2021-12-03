@@ -84,7 +84,7 @@ func (r *Repository) ListAll(req *pb.ListEmployeeRequest) ([]*model.Employee, in
         }
     }
 
-    listQuery := r.db.Model(&model.Employee{}).Select("*")
+    listQuery := r.db.Model(&model.Employee{}).Select("*").Limit(limit).Offset(offset)
     countQuery := r.db.Model(&model.Employee{}).Select("id")
 
     if req.GetCompanyId() != "" {
