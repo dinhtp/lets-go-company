@@ -2,18 +2,19 @@ package employee
 
 import (
     "fmt"
-    "gorm.io/gorm"
     "time"
     "strconv"
 
+    "gorm.io/gorm"
     "github.com/dinhtp/lets-go-company/model"
+
     pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
 func prepareDataToResponse(e *model.Employee) *pb.Employee {
     data := &pb.Employee{
         Id:        fmt.Sprintf("%d", e.ID),
-        Companyid: strconv.Itoa(int(e.CompanyId)),
+        CompanyId: strconv.Itoa(int(e.CompanyId)),
         Name:      e.Name,
         Email:     e.Email,
         Dob:       e.DOB.Format(time.RFC3339),
@@ -22,15 +23,17 @@ func prepareDataToResponse(e *model.Employee) *pb.Employee {
         CreatedAt: e.CreatedAt.Format(time.RFC3339),
         UpdatedAt: e.UpdatedAt.Format(time.RFC3339),
     }
+
     return data
 }
 
 func prepareDataToRequest(p *pb.Employee) *model.Employee {
-    companyid,_ := strconv.Atoi(p.Companyid)
+    companyId,_ := strconv.Atoi(p.GetCompanyId())
     dob,_ :=  time.Parse(time.RFC3339,p.Dob)
+
     return &model.Employee{
         Model:     gorm.Model{},
-        CompanyId: uint(companyid),
+        CompanyId: uint(companyId),
         Name:      p.Name,
         Email:     p.Email,
         DOB:       dob,
@@ -41,6 +44,7 @@ func prepareDataToRequest(p *pb.Employee) *model.Employee {
 
 func getModel(id uint, c *model.Employee) *model.Employee {
     c.ID = id
+
     return &model.Employee{
         Model: gorm.Model{
             ID:        id,

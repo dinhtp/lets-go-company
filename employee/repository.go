@@ -5,8 +5,8 @@ import (
     "strconv"
     "strings"
 
-    "github.com/dinhtp/lets-go-company/model"
     "gorm.io/gorm"
+    "github.com/dinhtp/lets-go-company/model"
 
     pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
@@ -16,7 +16,6 @@ type Repository struct {
 }
 
 func NewRepository(db *gorm.DB) *Repository {
-    db = db.Debug()
 
     return &Repository{db: db}
 }
@@ -70,10 +69,9 @@ func (r *Repository) ListAll(req *pb.ListEmployeeRequest) ([]*model.Employee, in
     var list []*model.Employee
 
     sql := ""
-    //sql2 := ""
     limit := int(req.GetLimit())
     offset := limit * int(req.GetPage()-1)
-    companyid, _ := strconv.Atoi(req.GetCompanyid())
+    companyId, _ := strconv.Atoi(req.GetCompanyId())
 
     if req.GetSearchField() != "" && req.GetSearchValue() != "" {
         searchFields := strings.Split(req.GetSearchField(), ",")
@@ -91,9 +89,9 @@ func (r *Repository) ListAll(req *pb.ListEmployeeRequest) ([]*model.Employee, in
     listQuery := r.db.Model(&model.Employee{}).Select("*")
     countQuery := r.db.Model(&model.Employee{}).Select("id")
 
-    if req.GetCompanyid() != "" {
-        listQuery = listQuery.Where("company_id = ?", uint(companyid))
-        countQuery = countQuery.Where("company_id = ?", uint(companyid))
+    if req.GetCompanyId() != "" {
+        listQuery = listQuery.Where("company_id = ?", uint(companyId))
+        countQuery = countQuery.Where("company_id = ?", uint(companyId))
     }
 
     if sql != "" {

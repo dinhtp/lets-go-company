@@ -1,23 +1,30 @@
 package employee
 
 import (
-    pb "github.com/dinhtp/lets-go-pbtype/employee"
+    "strings"
+
     "google.golang.org/grpc/codes"
     "google.golang.org/grpc/status"
-    "strings"
+
+    pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
 func validateOne(r *pb.OneEmployeeRequest) error {
     if "" == r.GetId() {
         return status.Error(codes.InvalidArgument, "company id is required")
     }
+
     return nil
 }
 
 func validateUpdate(e *pb.Employee) error {
-    if "" == e.GetId() {
-        return status.Error(codes.InvalidArgument, "CompanyID is required")
+    if e.GetId() == "" {
+        return status.Error(codes.InvalidArgument, "EmployeeID is required")
     }
+    if e.GetCompanyId() == "" {
+        return status.Error(codes.InvalidArgument,"Invalid CompanyID")
+    }
+
     return validateCreate(e)
 }
 
@@ -38,6 +45,7 @@ func validateCreate(e *pb.Employee) error {
     if e.GetRole() == "" {
         return status.Error(codes.InvalidArgument, "Role is required")
     }
+
     return nil
 }
 
@@ -52,15 +60,20 @@ func validateList(e *pb.ListEmployeeRequest) error  {
         return status.Error(codes.InvalidArgument, "Invalid Limit")
     }
 
+    if e.GetCompanyId() == "" {
+        return status.Error(codes.InvalidArgument, "Invalid CompanyId")
+    }
+
     if  e.GetSearchField() == "" && e.GetSearchValue() ==""{
         return nil
     }
 
     for i := 0; i < len(field); i++ {
-        var newfield = strings.ToLower(strings.TrimSpace(field[i]))
-        if newfield != "name" && newfield != "dob" && newfield != "email" && newfield != "gender" && newfield != "role" && newfield != "" {
+        var newField = strings.ToLower(strings.TrimSpace(field[i]))
+        if newField != "name" && newField != "dob" && newField != "email" && newField != "gender" && newField != "role" && newField != "" {
             return status.Error(codes.InvalidArgument, "Invalid SearchFields")
         }
     }
+
     return nil
 }

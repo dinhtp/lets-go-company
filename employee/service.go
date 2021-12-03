@@ -1,13 +1,14 @@
 package employee
 
 import (
-    "context"
     "fmt"
+    "context"
     "strconv"
 
     "gorm.io/gorm"
-    pb "github.com/dinhtp/lets-go-pbtype/employee"
     "github.com/gogo/protobuf/types"
+
+    pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
 type Service struct {
@@ -38,7 +39,6 @@ func (s Service) Create(ctx context.Context, e *pb.Employee) (*pb.Employee, erro
         return nil, err
     }
 
-    fmt.Println(e)
     employee, err := NewRepository(s.db).CreatOne(prepareDataToRequest(e))
 
     if nil != err {
@@ -68,8 +68,7 @@ func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListE
     if err := validateList(r); nil != err {
         return nil, err
     }
-    fmt.Println("In o day")
-    fmt.Println(r.GetCompanyid())
+
     company, count, err := NewRepository(s.db).ListAll(r)
     if nil != err {
         return nil, err
