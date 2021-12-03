@@ -15,7 +15,8 @@ import (
     "github.com/spf13/viper"
     "google.golang.org/grpc"
 
-    pb "github.com/dinhtp/lets-go-pbtype/company"
+    cpb "github.com/dinhtp/lets-go-pbtype/company"
+    epb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
 var restCmd = &cobra.Command{
@@ -82,9 +83,16 @@ func runRestCommand(cmd *cobra.Command, args []string) {
 }
 
 func initializeGatewayService(ctx context.Context, gw *runtime.ServeMux, endpoint string, opts []grpc.DialOption) {
-    companyGwErr := pb.RegisterCompanyServiceHandlerFromEndpoint(ctx, gw, endpoint, opts)
+    companyGwErr := cpb.RegisterCompanyServiceHandlerFromEndpoint(ctx, gw, endpoint, opts)
+    employeeGwErr := epb.RegisterEmployeeServiceHandlerFromEndpoint(ctx, gw, endpoint, opts)
+
     if nil != companyGwErr {
         fmt.Println(companyGwErr)
+        os.Exit(1)
+    }
+
+    if nil != employeeGwErr {
+        fmt.Println(employeeGwErr)
         os.Exit(1)
     }
 }
