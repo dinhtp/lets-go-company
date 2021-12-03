@@ -83,7 +83,7 @@ func (r *Repository) ListAll(req *pb.ListCompanyRequest) ([]*model.Company, int6
         }
     }
 
-    listQuery := r.db.Model(&model.Company{}).Select("*")
+    listQuery := r.db.Model(&model.Company{}).Select("*").Limit(limit).Offset(offset)
     countQuery := r.db.Model(&model.Company{}).Select("id")
 
     if sql != "" {
