@@ -2,6 +2,7 @@ package company
 
 import (
     "context"
+    "math"
     "strconv"
 
     "github.com/gogo/protobuf/types"
@@ -55,17 +56,22 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
 
     id, _ := strconv.Atoi(r.GetId())
 
-    company, totalEmployee, err := NewRepository(s.db).FindOne(id)
+    company, err := NewRepository(s.db).FindOne(id)
+    mapEmployee, err := NewRepository(s.db).countTotalEmployee()
+
+    companyData := prepareDataToResponse(company)
+    companyData.TotalEmployee = mapEmployee[uint(id)]
+
     if nil != err {
         return nil, err
     }
 
-    return prepareDataToResponse2(company, totalEmployee), nil
+    return companyData, nil
 }
 
 func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCompanyResponse, error) {
     var list []*pb.Company
-    var maxPage uint32
+    var maxPage float64
     if err := validateList(r); nil != err {
         return nil, err
     }
@@ -77,21 +83,19 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
     }
 
     for i := 0; i < len(company); i++ {
-        companyData := prepareDataToResponse2(company[i], mapEmployee[company[i].ID])
+        companyData := prepareDataToResponse(company[i])
+        companyData.TotalEmployee = mapEmployee[company[i].ID]
         list = append(list, companyData)
     }
 
-    maxPage = uint32(count) / r.GetLimit()
-    if uint32(count)%r.GetLimit() > 0 {
-        maxPage = (uint32(count) / r.GetLimit()) + 1
-    }
+    maxPage = math.Ceil(float64(uint32(count)) / float64(r.GetLimit()))
 
     return &pb.ListCompanyResponse{
         Items:      list,
         Page:       r.GetPage(),
         TotalCount: uint32(count),
         Limit:      r.GetLimit(),
-        MaxPage:    maxPage,
+        MaxPage:    uint32(maxPage),
     }, nil
 }
 

@@ -11,16 +11,16 @@ import (
 )
 
 func prepareDataToResponse(c *model.Company) *pb.Company {
-
     data := &pb.Company{
-        Id:        fmt.Sprintf("%d", c.ID),
-        Name:      c.Name,
-        Phone:     c.Phone,
-        Email:     c.Email,
-        Address:   c.Address,
-        TaxNumber: c.TaxNumber,
-        CreatedAt: c.CreatedAt.Format(time.RFC3339),
-        UpdatedAt: c.UpdatedAt.Format(time.RFC3339),
+        Id:            fmt.Sprintf("%d", c.ID),
+        Name:          c.Name,
+        Phone:         c.Phone,
+        Email:         c.Email,
+        Address:       c.Address,
+        TaxNumber:     c.TaxNumber,
+        CreatedAt:     c.CreatedAt.Format(time.RFC3339),
+        UpdatedAt:     c.UpdatedAt.Format(time.RFC3339),
+        TotalEmployee: 0,
     }
     return data
 }
@@ -51,20 +51,4 @@ func getModel(id uint, c *model.Company) *model.Company {
         Address:   c.Address,
         TaxNumber: c.TaxNumber,
     }
-}
-
-func prepareDataToResponse2(c *model.Company, countEmployee uint32) *pb.Company {
-
-    data := &pb.Company{
-        Id:            fmt.Sprintf("%d", c.ID),
-        Name:          c.Name,
-        Phone:         c.Phone,
-        Email:         c.Email,
-        Address:       c.Address,
-        TaxNumber:     c.TaxNumber,
-        CreatedAt:     c.CreatedAt.Format(time.RFC3339),
-        UpdatedAt:     c.UpdatedAt.Format(time.RFC3339),
-        TotalEmployee: countEmployee,
-    }
-    return data
 }

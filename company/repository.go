@@ -19,22 +19,16 @@ func NewRepository(db *gorm.DB) *Repository {
     return &Repository{db: db}
 }
 
-func (r *Repository) FindOne(id int) (*model.Company, uint32, error) {
+func (r *Repository) FindOne(id int) (*model.Company, error) {
     var result model.Company
-    var countEmployee uint32
 
     query := r.db.Model(&model.Company{}).Where("id = ?", id).First(&result)
-    countEmployeeQuery := r.db.Model(&model.Employee{}).Select("COUNT(company_id)").Where("company_id = ?", id).Find(&countEmployee)
 
     if err := query.Error; nil != err {
-        return nil, 0, err
+        return nil, err
     }
 
-    if err := countEmployeeQuery.Error; nil != err {
-        return nil, 0, err
-    }
-
-    return &result, countEmployee, nil
+    return &result, nil
 }
 
 func (r *Repository) CreatOne(c *model.Company) (*model.Company, error) {
