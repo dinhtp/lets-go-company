@@ -78,10 +78,10 @@ func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListE
         list = append(list, prepareDataToResponse(company[i]))
     }
 
-    if uint32(count) % r.GetLimit() != 0{
-        maxPage = (uint32(count)/r.GetLimit()) + 1
+    maxPage = uint32(count) / r.GetLimit()
+    if uint32(count)%r.GetLimit() > 0 {
+        maxPage = (uint32(count) / r.GetLimit()) + 1
     }
-    maxPage = uint32(count)/r.GetLimit()
 
     return &pb.ListEmplyeeResponse{
         Items:      list,

@@ -23,7 +23,7 @@ func validateUpdate(e *pb.Employee) error {
     }
 
     if e.GetCompanyId() == "" {
-        return status.Error(codes.InvalidArgument,"Invalid Company ID")
+        return status.Error(codes.InvalidArgument, "Invalid Company ID")
     }
 
     return validateCreate(e)
@@ -53,7 +53,7 @@ func validateCreate(e *pb.Employee) error {
     return nil
 }
 
-func validateList(e *pb.ListEmployeeRequest) error  {
+func validateList(e *pb.ListEmployeeRequest) error {
     var field = strings.Split(e.GetSearchField(), ",")
 
     if e.GetPage() <= 0 {
@@ -64,7 +64,7 @@ func validateList(e *pb.ListEmployeeRequest) error  {
         return status.Error(codes.InvalidArgument, "Invalid Limit")
     }
 
-    if  e.GetSearchField() == "" && e.GetSearchValue() ==""{
+    if e.GetSearchField() == "" && e.GetSearchValue() == "" {
         return nil
     }
 

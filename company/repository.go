@@ -19,16 +19,22 @@ func NewRepository(db *gorm.DB) *Repository {
     return &Repository{db: db}
 }
 
-func (r *Repository) FindOne(id int) (*model.Company, error) {
+func (r *Repository) FindOne(id int) (*model.Company, uint32, error) {
     var result model.Company
+    var countEmployee uint32
 
     query := r.db.Model(&model.Company{}).Where("id = ?", id).First(&result)
+    countEmployeeQuery := r.db.Model(&model.Employee{}).Select("COUNT(company_id)").Where("company_id = ?", id).Find(&countEmployee)
 
     if err := query.Error; nil != err {
-        return nil, err
+        return nil, 0, err
     }
 
-    return &result, nil
+    if err := countEmployeeQuery.Error; nil != err {
+        return nil, 0, err
+    }
+
+    return &result, countEmployee, nil
 }
 
 func (r *Repository) CreatOne(c *model.Company) (*model.Company, error) {
@@ -100,4 +106,26 @@ func (r *Repository) ListAll(req *pb.ListCompanyRequest) ([]*model.Company, int6
     }
 
     return list, count, nil
+}
+
+func (r *Repository) countTotalEmployee() (map[uint]uint32, error) {
+    var results []*model.CompanyTotalEmployee
+    totalCount := map[uint]uint32{}
+
+    listCountEmployeeQuery := r.db.Model(&model.Employee{}).Select("company_id, COUNT(id) AS total_employee").
+        Group("company_id").Find(&results)
+
+    for _, re := range results {
+        totalCount[re.CompanyID] = re.TotalEmployee
+    }
+
+    if err := listCountEmployeeQuery.Error; nil != err {
+        return totalCount, err
+    }
+
+    if nil == results {
+        return totalCount, nil
+    }
+
+    return totalCount, nil
 }

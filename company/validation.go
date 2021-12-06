@@ -53,7 +53,7 @@ func validateList(r *pb.ListCompanyRequest) error {
         return status.Error(codes.InvalidArgument, "Invalid Limit")
     }
 
-    if  r.GetSearchField() == "" && r.GetSearchValue() ==""{
+    if r.GetSearchField() == "" && r.GetSearchValue() == "" {
         return nil
     }
 

@@ -13,3 +13,8 @@ type Company struct {
     TaxNumber string
     Employees []Employee
 }
+
+type CompanyTotalEmployee struct {
+    CompanyID     uint
+    TotalEmployee uint32
+}

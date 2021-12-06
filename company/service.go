@@ -55,27 +55,35 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
 
     id, _ := strconv.Atoi(r.GetId())
 
-    company, err := NewRepository(s.db).FindOne(id)
+    company, totalEmployee, err := NewRepository(s.db).FindOne(id)
     if nil != err {
         return nil, err
     }
 
-    return prepareDataToResponse(company), nil
+    return prepareDataToResponse2(company, totalEmployee), nil
 }
 
 func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCompanyResponse, error) {
     var list []*pb.Company
+    var maxPage uint32
     if err := validateList(r); nil != err {
         return nil, err
     }
 
     company, count, err := NewRepository(s.db).ListAll(r)
-
+    mapEmployee, err := NewRepository(s.db).countTotalEmployee()
     if nil != err {
         return nil, err
     }
+
     for i := 0; i < len(company); i++ {
-        list = append(list, prepareDataToResponse(company[i]))
+        companyData := prepareDataToResponse2(company[i], mapEmployee[company[i].ID])
+        list = append(list, companyData)
+    }
+
+    maxPage = uint32(count) / r.GetLimit()
+    if uint32(count)%r.GetLimit() > 0 {
+        maxPage = (uint32(count) / r.GetLimit()) + 1
     }
 
     return &pb.ListCompanyResponse{
@@ -83,6 +91,7 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
         Page:       r.GetPage(),
         TotalCount: uint32(count),
         Limit:      r.GetLimit(),
+        MaxPage:    maxPage,
     }, nil
 }
 
