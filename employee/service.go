@@ -65,7 +65,6 @@ func (s Service) Update(ctx context.Context, r *pb.Employee) (*pb.Employee, erro
 
 func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListEmplyeeResponse, error) {
     var list []*pb.Employee
-    var maxPage float64
     if err := validateList(r); nil != err {
         return nil, err
     }
@@ -79,14 +78,12 @@ func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListE
         list = append(list, prepareDataToResponse(company[i]))
     }
 
-    maxPage = math.Ceil(float64(uint32(count)) / float64(r.GetLimit()))
-
     return &pb.ListEmplyeeResponse{
         Items:      list,
         TotalCount: uint32(count),
         Page:       r.GetPage(),
         Limit:      r.GetLimit(),
-        MaxPage:    uint32(maxPage),
+        MaxPage:    uint32(math.Ceil(float64(uint32(count)) / float64(r.GetLimit()))),
     }, nil
 }
 

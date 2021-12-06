@@ -102,7 +102,7 @@ func (r *Repository) ListAll(req *pb.ListCompanyRequest) ([]*model.Company, int6
     return list, count, nil
 }
 
-func (r *Repository) countTotalEmployee() (map[uint]uint32, error) {
+func (r *Repository) countTotalEmployee(id int) (map[uint]uint32, error) {
     var results []*model.CompanyTotalEmployee
     totalCount := map[uint]uint32{}
 
@@ -111,6 +111,10 @@ func (r *Repository) countTotalEmployee() (map[uint]uint32, error) {
 
     for _, re := range results {
         totalCount[re.CompanyID] = re.TotalEmployee
+    }
+
+    if id != 0{
+        listCountEmployeeQuery = listCountEmployeeQuery.Where("company_id=?",id)
     }
 
     if err := listCountEmployeeQuery.Error; nil != err {

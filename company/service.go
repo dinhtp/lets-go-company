@@ -57,7 +57,7 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
     id, _ := strconv.Atoi(r.GetId())
 
     company, err := NewRepository(s.db).FindOne(id)
-    mapEmployee, err := NewRepository(s.db).countTotalEmployee()
+    mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
 
     companyData := prepareDataToResponse(company)
     companyData.TotalEmployee = mapEmployee[uint(id)]
@@ -71,13 +71,12 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
 
 func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCompanyResponse, error) {
     var list []*pb.Company
-    var maxPage float64
     if err := validateList(r); nil != err {
         return nil, err
     }
 
     company, count, err := NewRepository(s.db).ListAll(r)
-    mapEmployee, err := NewRepository(s.db).countTotalEmployee()
+    mapEmployee, err := NewRepository(s.db).countTotalEmployee(0)
     if nil != err {
         return nil, err
     }
@@ -88,14 +87,12 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
         list = append(list, companyData)
     }
 
-    maxPage = math.Ceil(float64(uint32(count)) / float64(r.GetLimit()))
-
     return &pb.ListCompanyResponse{
         Items:      list,
         Page:       r.GetPage(),
         TotalCount: uint32(count),
         Limit:      r.GetLimit(),
-        MaxPage:    uint32(maxPage),
+        MaxPage:    uint32(math.Ceil(float64(uint32(count)) / float64(r.GetLimit()))),
     }, nil
 }
 
