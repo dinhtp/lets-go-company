@@ -101,3 +101,31 @@ func (r *Repository) ListAll(req *pb.ListCompanyRequest) ([]*model.Company, int6
 
     return list, count, nil
 }
+
+func (r *Repository) countTotalEmployee(id int) (map[uint]uint32, error) {
+    var results []*model.CompanyTotalEmployee
+    totalCount := map[uint]uint32{}
+
+    query := r.db.Model(&model.Employee{}).Select("company_id, COUNT(id) AS total_employee").
+        Group("company_id")
+
+    if id != 0{
+        query = query.Where("company_id=?",id)
+    }
+
+    query = query.Find(&results)
+
+    for _, re := range results {
+        totalCount[re.CompanyID] = re.TotalEmployee
+    }
+
+    if err := query.Error; nil != err {
+        return totalCount, err
+    }
+
+    if nil == results {
+        return totalCount, nil
+    }
+
+    return totalCount, nil
+}
