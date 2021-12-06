@@ -106,18 +106,20 @@ func (r *Repository) countTotalEmployee(id int) (map[uint]uint32, error) {
     var results []*model.CompanyTotalEmployee
     totalCount := map[uint]uint32{}
 
-    listCountEmployeeQuery := r.db.Model(&model.Employee{}).Select("company_id, COUNT(id) AS total_employee").
-        Group("company_id").Find(&results)
+    query := r.db.Model(&model.Employee{}).Select("company_id, COUNT(id) AS total_employee").
+        Group("company_id")
+
+    if id != 0{
+        query = query.Where("company_id=?",id)
+    }
+
+    query = query.Find(&results)
 
     for _, re := range results {
         totalCount[re.CompanyID] = re.TotalEmployee
     }
 
-    if id != 0{
-        listCountEmployeeQuery = listCountEmployeeQuery.Where("company_id=?",id)
-    }
-
-    if err := listCountEmployeeQuery.Error; nil != err {
+    if err := query.Error; nil != err {
         return totalCount, err
     }
 
