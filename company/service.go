@@ -2,7 +2,6 @@ package company
 
 import (
     "context"
-    "fmt"
     "math"
     "strconv"
 
@@ -56,14 +55,13 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         return nil, err
     }
 
-    fmt.Println("1")
+    var fault error
 
     companyChanel := make(chan *model.Company, 1)
     mapChanel := make(chan map[uint]uint32, 1)
     errorChanel := make(chan error, 2)
 
     id, _ := strconv.Atoi(r.GetId())
-    fmt.Println("2")
 
     go func() {
         company, err := NewRepository(s.db).FindOne(id)
@@ -75,7 +73,6 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         errorChanel <- nil
         companyChanel <- company
     }()
-    fmt.Println("3")
 
     go func() {
         mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
@@ -87,18 +84,16 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         errorChanel <- nil
         mapChanel <- mapEmployee
     }()
-    fmt.Println("4")
 
     company := <-companyChanel
     mapEmployee := <-mapChanel
-    fmt.Println("5")
 
-    for range errorChanel {
+    for i := 0; i < len(errorChanel); i++ {
         if err := <-errorChanel; err != nil {
-            return nil, err
+            fault = err
+            return nil, fault
         }
     }
-    fmt.Println("16")
 
     companyData := prepareDataToResponse(company)
     companyData.TotalEmployee = mapEmployee[uint(id)]
@@ -112,6 +107,7 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
     }
 
     var list []*pb.Company
+    var fault error
 
     companyChanel := make(chan []*model.Company, 1)
     countChanel := make(chan int64, 1)
@@ -142,9 +138,10 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
         mapChanel <- mapEmployee
     }()
 
-    for range errorChanel {
+    for i := 0; i < len(errorChanel); i++ {
         if err := <-errorChanel; err != nil {
-            return nil, err
+            fault = err
+            return nil, fault
         }
     }
 
