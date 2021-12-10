@@ -31,7 +31,7 @@ func (s Service) Get(ctx context.Context, r *pb.OneEmployeeRequest) (*pb.Employe
         return nil, err
     }
 
-    return prepareDataToResponse(employee), nil
+    return PrepareDataToResponse(employee), nil
 }
 
 func (s Service) Create(ctx context.Context, e *pb.Employee) (*pb.Employee, error) {
@@ -45,7 +45,7 @@ func (s Service) Create(ctx context.Context, e *pb.Employee) (*pb.Employee, erro
         return nil, err
     }
 
-    return prepareDataToResponse(employee), nil
+    return PrepareDataToResponse(employee), nil
 }
 
 func (s Service) Update(ctx context.Context, r *pb.Employee) (*pb.Employee, error) {
@@ -60,7 +60,7 @@ func (s Service) Update(ctx context.Context, r *pb.Employee) (*pb.Employee, erro
         return nil, err
     }
 
-    return prepareDataToResponse(employee), nil
+    return PrepareDataToResponse(employee), nil
 }
 
 func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListEmplyeeResponse, error) {
@@ -69,13 +69,13 @@ func (s Service) List(ctx context.Context, r *pb.ListEmployeeRequest) (*pb.ListE
         return nil, err
     }
 
-    company, count, err := NewRepository(s.db).ListAll(r)
+    employee, count, err := NewRepository(s.db).ListAll(r)
 
     if nil != err {
         return nil, err
     }
-    for i := 0; i < len(company); i++ {
-        list = append(list, prepareDataToResponse(company[i]))
+    for i := range employee {
+        list = append(list, PrepareDataToResponse(employee[i]))
     }
 
     return &pb.ListEmplyeeResponse{

@@ -8,6 +8,7 @@ import (
     "github.com/gogo/protobuf/types"
     "gorm.io/gorm"
 
+    "github.com/dinhtp/lets-go-company/model"
     pb "github.com/dinhtp/lets-go-pbtype/company"
 )
 
@@ -54,34 +55,108 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         return nil, err
     }
 
+    var fault error
+
+    companyChanel := make(chan *model.Company, 1)
+    mapChanel := make(chan map[uint]uint32, 1)
+    errorChanel := make(chan error, 2)
+
     id, _ := strconv.Atoi(r.GetId())
 
-    company, err := NewRepository(s.db).FindOne(id)
-    mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
+    go func() {
+        company, err := NewRepository(s.db).FindOne(id)
+        if err != nil {
+            errorChanel <- err
+            companyChanel <- nil
+            return
+        }
+        errorChanel <- nil
+        companyChanel <- company
+    }()
+
+    go func() {
+        mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
+        if err != nil {
+            errorChanel <- err
+            mapChanel <- nil
+            return
+        }
+        errorChanel <- nil
+        mapChanel <- mapEmployee
+    }()
+
+    company := <-companyChanel
+    mapEmployee := <-mapChanel
+
+    for i := 0; i < len(errorChanel); i++ {
+        if err := <-errorChanel; err != nil {
+            fault = err
+            return nil, fault
+        }
+    }
+
+    if nil != fault {
+        return nil, fault
+    }
 
     companyData := prepareDataToResponse(company)
     companyData.TotalEmployee = mapEmployee[uint(id)]
-
-    if nil != err {
-        return nil, err
-    }
 
     return companyData, nil
 }
 
 func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCompanyResponse, error) {
-    var list []*pb.Company
     if err := validateList(r); nil != err {
         return nil, err
     }
 
-    company, count, err := NewRepository(s.db).ListAll(r)
-    mapEmployee, err := NewRepository(s.db).countTotalEmployee(0)
-    if nil != err {
-        return nil, err
+    var list []*pb.Company
+    var fault error
+
+    companyChanel := make(chan []*model.Company, 1)
+    countChanel := make(chan int64, 1)
+    mapChanel := make(chan map[uint]uint32, 1)
+    errorChanel := make(chan error, 2)
+
+    go func() {
+        company, count, err := NewRepository(s.db).ListAll(r)
+        if err != nil {
+            errorChanel <- err
+            companyChanel <- nil
+            countChanel <- 0
+            return
+        }
+        errorChanel <- nil
+        companyChanel <- company
+        countChanel <- count
+    }()
+
+    go func() {
+        mapEmployee, err := NewRepository(s.db).countTotalEmployee(0)
+        if err != nil {
+            errorChanel <- err
+            mapChanel <- nil
+            return
+        }
+        errorChanel <- nil
+        mapChanel <- mapEmployee
+    }()
+
+    for i := 0; i < len(errorChanel); i++ {
+        if err := <-errorChanel; err != nil {
+            fault = err
+        }
     }
 
-    for i := 0; i < len(company); i++ {
+    if nil != fault {
+        return nil, fault
+    }
+
+    company := <-companyChanel
+    count := <-countChanel
+    mapEmployee := <-mapChanel
+
+    for i := range company {
         companyData := prepareDataToResponse(company[i])
         companyData.TotalEmployee = mapEmployee[company[i].ID]
         list = append(list, companyData)

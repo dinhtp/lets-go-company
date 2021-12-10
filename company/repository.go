@@ -109,8 +109,8 @@ func (r *Repository) countTotalEmployee(id int) (map[uint]uint32, error) {
     query := r.db.Model(&model.Employee{}).Select("company_id, COUNT(id) AS total_employee").
         Group("company_id")
 
-    if id != 0{
-        query = query.Where("company_id=?",id)
+    if id != 0 {
+        query = query.Where("company_id=?", id)
     }
 
     query = query.Find(&results)

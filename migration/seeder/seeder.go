@@ -47,4 +47,3 @@ func CreateFakeEmployee(db *gorm.DB) error {
     }
     return nil
 }
-
