@@ -2,6 +2,7 @@ package company
 
 import (
     "context"
+    "fmt"
     "math"
     "strconv"
 
@@ -55,36 +56,49 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         return nil, err
     }
 
-    var company *model.Company
-    var mapEmployee map[uint]uint32
+    fmt.Println("1")
 
     companyChanel := make(chan *model.Company, 1)
     mapChanel := make(chan map[uint]uint32, 1)
     errorChanel := make(chan error, 2)
 
     id, _ := strconv.Atoi(r.GetId())
+    fmt.Println("2")
 
     go func() {
         company, err := NewRepository(s.db).FindOne(id)
+        if err != nil {
+            errorChanel <- err
+            companyChanel <- nil
+            return
+        }
+        errorChanel <- nil
         companyChanel <- company
-        errorChanel <- err
     }()
+    fmt.Println("3")
 
     go func() {
         mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
+        if err != nil {
+            errorChanel <- err
+            mapChanel <- nil
+            return
+        }
+        errorChanel <- nil
         mapChanel <- mapEmployee
-        errorChanel <- err
     }()
+    fmt.Println("4")
 
-    for i := range errorChanel {
-        if i != nil {
-            company = nil
-            mapEmployee = nil
-        } else {
-            company = <-companyChanel
-            mapEmployee = <-mapChanel
+    company := <-companyChanel
+    mapEmployee := <-mapChanel
+    fmt.Println("5")
+
+    for range errorChanel {
+        if err := <-errorChanel; err != nil {
+            return nil, err
         }
     }
+    fmt.Println("16")
 
     companyData := prepareDataToResponse(company)
     companyData.TotalEmployee = mapEmployee[uint(id)]
@@ -98,9 +112,6 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
     }
 
     var list []*pb.Company
-    var company []*model.Company
-    var count int64
-    var mapEmployee map[uint]uint32
 
     companyChanel := make(chan []*model.Company, 1)
     countChanel := make(chan int64, 1)
@@ -109,28 +120,37 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
 
     go func() {
         company, count, err := NewRepository(s.db).ListAll(r)
-        errorChanel <- err
+        if err != nil {
+            errorChanel <- err
+            companyChanel <- nil
+            countChanel <- 0
+            return
+        }
+        errorChanel <- nil
         companyChanel <- company
         countChanel <- count
     }()
 
     go func() {
         mapEmployee, err := NewRepository(s.db).countTotalEmployee(0)
-        errorChanel <- err
+        if err != nil {
+            errorChanel <- err
+            mapChanel <- nil
+            return
+        }
+        errorChanel <- nil
         mapChanel <- mapEmployee
     }()
 
-    for i := range errorChanel {
-        if i != nil {
-            company = nil
-            count = 0
-            mapEmployee = nil
-        } else {
-            company = <-companyChanel
-            count = <-countChanel
-            mapEmployee = <-mapChanel
+    for range errorChanel {
+        if err := <-errorChanel; err != nil {
+            return nil, err
         }
     }
+
+    company := <-companyChanel
+    count := <-countChanel
+    mapEmployee := <-mapChanel
 
     for i := range company {
         companyData := prepareDataToResponse(company[i])
