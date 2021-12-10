@@ -11,22 +11,6 @@ import (
     pb "github.com/dinhtp/lets-go-pbtype/employee"
 )
 
-func prepareDataToResponse(e *model.Employee) *pb.Employee {
-    data := &pb.Employee{
-        Id:        fmt.Sprintf("%d", e.ID),
-        CompanyId: strconv.Itoa(int(e.CompanyId)),
-        Name:      e.Name,
-        Email:     e.Email,
-        Dob:       e.DOB.Format(time.RFC3339),
-        Gender:    e.Gender,
-        Role:      e.Role,
-        CreatedAt: e.CreatedAt.Format(time.RFC3339),
-        UpdatedAt: e.UpdatedAt.Format(time.RFC3339),
-    }
-
-    return data
-}
-
 func prepareDataToRequest(p *pb.Employee) *model.Employee {
     companyId, _ := strconv.Atoi(p.GetCompanyId())
     dob, _ := time.Parse(time.RFC3339, p.Dob)
@@ -58,5 +42,19 @@ func getModel(id uint, c *model.Employee) *model.Employee {
         DOB:       c.DOB,
         Gender:    c.Gender,
         Role:      c.Role,
+    }
+}
+
+func PrepareDataToResponse(e *model.Employee) *pb.Employee {
+    return &pb.Employee{
+        Id:        fmt.Sprintf("%d", e.ID),
+        CompanyId: strconv.Itoa(int(e.CompanyId)),
+        Name:      e.Name,
+        Email:     e.Email,
+        Dob:       e.DOB.Format(time.RFC3339),
+        Gender:    e.Gender,
+        Role:      e.Role,
+        CreatedAt: e.CreatedAt.Format(time.RFC3339),
+        UpdatedAt: e.UpdatedAt.Format(time.RFC3339),
     }
 }

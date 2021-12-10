@@ -3,8 +3,8 @@ package seeder
 import (
     "time"
 
-    "gorm.io/gorm"
     "github.com/bxcodec/faker/v3"
+    "gorm.io/gorm"
 )
 
 type Employee struct {

@@ -9,6 +9,7 @@ import (
     "gorm.io/gorm"
 
     pb "github.com/dinhtp/lets-go-pbtype/company"
+    "github.com/dinhtp/lets-go-company/model"
 )
 
 type Service struct {
@@ -70,18 +71,42 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
 }
 
 func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCompanyResponse, error) {
-    var list []*pb.Company
     if err := validateList(r); nil != err {
         return nil, err
     }
 
-    company, count, err := NewRepository(s.db).ListAll(r)
-    mapEmployee, err := NewRepository(s.db).countTotalEmployee(0)
+    var list []*pb.Company
+    companyChanel := make(chan []*model.Company, 1)
+    countChanel := make(chan int64, 1)
+    mapChanel := make(chan map[uint]uint32, 1)
+    errorChanel := make(chan error, 2)
+
+    go func() {
+        company, count, err := NewRepository(s.db).ListAll(r)
+        errorChanel <- err
+        companyChanel <- company
+        countChanel <- count
+    }()
+
+    go func() {
+        mapEmployee, err := NewRepository(s.db).countTotalEmployee(0)
+        errorChanel <- err
+        mapChanel <- mapEmployee
+    }()
+
+    company := <-companyChanel
+    count := <-countChanel
+    mapEmployee := <-mapChanel
+    err := <-errorChanel
     if nil != err {
         return nil, err
     }
+    err2 := <-errorChanel
+    if nil != err2 {
+        return nil, err2
+    }
 
-    for i := 0; i < len(company); i++ {
+    for i := range company {
         companyData := prepareDataToResponse(company[i])
         companyData.TotalEmployee = mapEmployee[company[i].ID]
         list = append(list, companyData)

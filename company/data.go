@@ -11,7 +11,7 @@ import (
 )
 
 func prepareDataToResponse(c *model.Company) *pb.Company {
-    data := &pb.Company{
+    return &pb.Company{
         Id:            fmt.Sprintf("%d", c.ID),
         Name:          c.Name,
         Phone:         c.Phone,
@@ -22,7 +22,6 @@ func prepareDataToResponse(c *model.Company) *pb.Company {
         UpdatedAt:     c.UpdatedAt.Format(time.RFC3339),
         TotalEmployee: 0,
     }
-    return data
 }
 
 func prepareDataToRequest(p *pb.Company) *model.Company {

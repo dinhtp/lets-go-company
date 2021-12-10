@@ -68,7 +68,7 @@ func validateList(e *pb.ListEmployeeRequest) error {
         return nil
     }
 
-    for i := 0; i < len(field); i++ {
+    for i, _ := range field {
         var newField = strings.ToLower(strings.TrimSpace(field[i]))
         if newField != "name" && newField != "dob" && newField != "email" && newField != "gender" && newField != "role" && newField != "" {
             return status.Error(codes.InvalidArgument, "Invalid SearchFields")
