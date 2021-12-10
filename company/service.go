@@ -95,6 +95,10 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         }
     }
 
+    if nil != fault {
+        return nil, fault
+    }
+
     companyData := prepareDataToResponse(company)
     companyData.TotalEmployee = mapEmployee[uint(id)]
 
@@ -141,8 +145,11 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
     for i := 0; i < len(errorChanel); i++ {
         if err := <-errorChanel; err != nil {
             fault = err
-            return nil, fault
         }
+    }
+
+    if nil != fault {
+        return nil, fault
     }
 
     company := <-companyChanel
