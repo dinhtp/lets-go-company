@@ -8,8 +8,8 @@ import (
     "github.com/gogo/protobuf/types"
     "gorm.io/gorm"
 
-    pb "github.com/dinhtp/lets-go-pbtype/company"
     "github.com/dinhtp/lets-go-company/model"
+    pb "github.com/dinhtp/lets-go-pbtype/company"
 )
 
 type Service struct {
@@ -55,17 +55,39 @@ func (s Service) Get(ctx context.Context, r *pb.OneCompanyRequest) (*pb.Company,
         return nil, err
     }
 
+    var company *model.Company
+    var mapEmployee map[uint]uint32
+
+    companyChanel := make(chan *model.Company, 1)
+    mapChanel := make(chan map[uint]uint32, 1)
+    errorChanel := make(chan error, 2)
+
     id, _ := strconv.Atoi(r.GetId())
 
-    company, err := NewRepository(s.db).FindOne(id)
-    mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
+    go func() {
+        company, err := NewRepository(s.db).FindOne(id)
+        companyChanel <- company
+        errorChanel <- err
+    }()
+
+    go func() {
+        mapEmployee, err := NewRepository(s.db).countTotalEmployee(id)
+        mapChanel <- mapEmployee
+        errorChanel <- err
+    }()
+
+    for i := range errorChanel {
+        if i != nil {
+            company = nil
+            mapEmployee = nil
+        } else {
+            company = <-companyChanel
+            mapEmployee = <-mapChanel
+        }
+    }
 
     companyData := prepareDataToResponse(company)
     companyData.TotalEmployee = mapEmployee[uint(id)]
-
-    if nil != err {
-        return nil, err
-    }
 
     return companyData, nil
 }
@@ -76,6 +98,10 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
     }
 
     var list []*pb.Company
+    var company []*model.Company
+    var count int64
+    var mapEmployee map[uint]uint32
+
     companyChanel := make(chan []*model.Company, 1)
     countChanel := make(chan int64, 1)
     mapChanel := make(chan map[uint]uint32, 1)
@@ -94,16 +120,16 @@ func (s Service) List(ctx context.Context, r *pb.ListCompanyRequest) (*pb.ListCo
         mapChanel <- mapEmployee
     }()
 
-    company := <-companyChanel
-    count := <-countChanel
-    mapEmployee := <-mapChanel
-    err := <-errorChanel
-    if nil != err {
-        return nil, err
-    }
-    err2 := <-errorChanel
-    if nil != err2 {
-        return nil, err2
+    for i := range errorChanel {
+        if i != nil {
+            company = nil
+            count = 0
+            mapEmployee = nil
+        } else {
+            company = <-companyChanel
+            count = <-countChanel
+            mapEmployee = <-mapChanel
+        }
     }
 
     for i := range company {
