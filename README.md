@@ -8,51 +8,183 @@ Rest service will handle the http requests while gRPC will handle the rpc reques
 The company and employee ERD can be referred below:
 ![company-employee ERD](./asset/company-employee.png)
 
-## Expected Output
-* Build `go-company-service` image and bring up the services in `docker-compose.yml`.
-* Execute database migration and seeding.
-* Expose company API resources endpoint which includes:
-    * Create a company.
-    * Get a company by an id.
-    * Update a company by an id.
-    * Delete a company by an id.
-    * list a company by page and limit.
-* Expose employee API resources endpoint which includes:
-    * Create an employee for a specific company.
-    * Get an employee by an id.
-    * Update an employee by an id.
-    * Delete an employee by an id.
-    * list employee by company id, page and limit.
-* Calculate the current total employee of a company.
+## API Output
+### Company API Output
+#### Get a company by ID.
+    - URL: [GET] {company_url}/go/company/{id}
+    - Response: 
+        {
+            "id": "string",
+            "name": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "tax_number": "string",
+            "total_employee": 0,
+            "created_at": "string",
+            "updated_at": "string"
+        }
+#### Create a company.
+    - URL: [POST] {company_url}/go/company
+    - Payload:
+        {
+            "name": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "tax_number": "string"
+        }
+    - Response:
+        {
+            "id": "string",
+            "name": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "tax_number": "string",
+            "total_employee": 0,
+            "created_at": "string",
+            "updated_at": "string"
+        }
+#### Update a company by ID.
+    - URL: [PUT] {company_url}/go/company/{id}
+    - Payload:
+        {
+            "id": "string",
+            "name": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "tax_number": "string"
+        }
+    - Response:
+        {
+            "id": "string",
+            "name": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "tax_number": "string",
+            "total_employee": 0,
+            "created_at": "string",
+            "updated_at": "string"
+        }
+#### Delete a company by ID.
+    - URL: [DELETE] {company_url}/go/company/{id}
+    - Status: 200
+#### list a company by page, limit and filter by "name", "phone", "email"
+    - URL: [GET] {company_url}/go/compannies
+    - Query: ?page=0&limit=0&search_value=string&search_fields=name,phone,email
+    - Response:
+        {
+            "items": [
+                {
+                    "id": "string",
+                    "name": "string",
+                    "phone": "string",
+                    "email": "string",
+                    "address": "string",
+                    "tax_number": "string",
+                    "total_employee": 0,
+                    "created_at": "string",
+                    "updated_at": "string"
+                },
+                ...
+            ]
+            "max_page": 0,
+            "total_count": 0,
+            "page": 0,
+            "limit": 0,
+        }
 
-## Sample JSON response:
-### Company
-```
-{
-    "id": "string",
-    "name": "string",
-    "phone": "string",
-    "email": "string",
-    "address": "string",
-    "tax_number": "string",
-    "total_employee": 0,
-    "created_at": "string",
-    "updated_at": "string"
-}
-```
-### Employee
-```
-{
-    "id": "string",
-    "company_id": "string",
-    "name": "string",
-    "email": "string",
-    "dob": "string",
-    "gender": "string", // allowed values: "male", "female", "not_specified"
-    "role": "string", // allowed values: "manager", "staff", "intern""
-    "created_at": "string",
-    "updated_at": "string"
-}
-```
+### Employee API Output
+#### Get an employee by ID.
+    - URL: [GET] {company_url}/go/employee/{id}
+    - Response:
+        {
+            "id": "string",
+            "company_id": "string",
+            "name": "string",
+            "email": "string",
+            "dob": "string",
+            "gender": "string",
+            "role": "string",
+            "created_at": "string",
+            "updated_at": "string"
+        }
+#### Create an employee for a specific company.
+    - URL: [POST] {company_url}/go/company/{company_id}/employee
+    - Payload:
+        {
+            "company_id": "string",
+            "name": "string",
+            "email": "string",
+            "dob": "string",
+            "gender": "string", // allowed values: "male", "female", "not_specified"
+            "role": "string", // allowed values: "manager", "staff", "intern"
+        }
+    - Response:
+        {
+            "id": "string",
+            "company_id": "string",
+            "name": "string",
+            "email": "string",
+            "dob": "string",
+            "gender": "string",
+            "role": "string",
+            "created_at": "string",
+            "updated_at": "string"
+        }
+#### Update an employee by ID.
+    - URL: [POST] {company_url}/go/employee/{id}
+    - Payload:
+        {
+            "id": "string",
+            "company_id": "string",
+            "name": "string",
+            "email": "string",
+            "dob": "string",
+            "gender": "string", // allowed values: "male", "female", "not_specified"
+            "role": "string", // allowed values: "manager", "staff", "intern"
+        }
+    - Response:
+        {
+            "id": "string",
+            "company_id": "string",
+            "name": "string",
+            "email": "string",
+            "dob": "string",
+            "gender": "string",
+            "role": "string",
+            "created_at": "string",
+            "updated_at": "string"
+        }
+#### Delete an employee by ID.
+    - URL: [DELETE] {company_url}/go/employee/{id}
+    - Status: 200
+#### list employee by company id, page, limit and filter by "name", "email"
+    - URL: [GET] {company_url}/go/company/{company_id}/employees
+    - Query: ?page=0&limit=0&search_value=string&search_fields=name,email
+    - Response:
+        {
+            "items": [
+                {
+                    "id": "string",
+                    "company_id": "string",
+                    "name": "string",
+                    "email": "string",
+                    "dob": "string",
+                    "gender": "string",
+                    "role": "string",
+                    "created_at": "string",
+                    "updated_at": "string"
+                },
+                ...
+            ]
+            "max_page": 0,
+            "total_count": 0,
+            "page": 0,
+            "limit": 0,
+        }
 
 > NOTE: DO NOT commit changes directly into the master branch. Make your own master branch.

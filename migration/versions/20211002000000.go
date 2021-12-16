@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func Version20211002000000(tx *gorm.DB) error {
+func Version20211215000000(tx *gorm.DB) error {
 	type Company struct {
 		ID        uint   `gorm:"TYPE:BIGINT(20) UNSIGNED AUTO_INCREMENT;NOT NULL;PRIMARY_KEY"`
 		Name      string `gorm:"TYPE:VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;NOT NULL"`
