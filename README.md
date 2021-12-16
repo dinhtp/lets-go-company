@@ -8,12 +8,9 @@ Rest service will handle the http requests while gRPC will handle the rpc reques
 The company and employee ERD can be referred below:
 ![company-employee ERD](./asset/company-employee.png)
 
-The company and employee Pbtype can be referred below:
-![Pbtype](./asset/pbtype.png)
-
 ## Expected Output
-* Bring up the service by Docker compose.
-* Execute Migration and Seeding successfully.
+* Build `go-company-service` image and bring up the services in `docker-compose.yml`.
+* Execute database migration and seeding.
 * Expose company API resources endpoint which includes:
     * Create a company.
     * Get a company by an id.
@@ -28,4 +25,34 @@ The company and employee Pbtype can be referred below:
     * list employee by company id, page and limit.
 * Calculate the current total employee of a company.
 
-> NOTE: DO NOT commit changes directly into the master branch.
+## Sample JSON response:
+### Company
+```
+{
+    "id": "string",
+    "name": "string",
+    "phone": "string",
+    "email": "string",
+    "address": "string",
+    "tax_number": "string",
+    "total_employee": 0,
+    "created_at": "string",
+    "updated_at": "string"
+}
+```
+### Employee
+```
+{
+    "id": "string",
+    "company_id": "string",
+    "name": "string",
+    "email": "string",
+    "dob": "string",
+    "gender": "string", // allowed values: "male", "female", "not_specified"
+    "role": "string", // allowed values: "manager", "staff", "intern""
+    "created_at": "string",
+    "updated_at": "string"
+}
+```
+
+> NOTE: DO NOT commit changes directly into the master branch. Make your own master branch.

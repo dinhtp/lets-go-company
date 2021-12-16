@@ -8,12 +8,15 @@ import (
 )
 
 type Company struct {
-    gorm.Model
+    ID        uint
     Name      string `faker:"domain_name"`
     Phone     string `faker:"toll_free_number"`
     Email     string `faker:"email"`
     Address   string `faker:"sentence"`
     TaxNumber string `faker:"phone_number"`
+    CreatedAt time.Time
+    UpdatedAt time.Time
+    DeletedAt gorm.DeletedAt
 }
 
 func FakeCompany() (Company, error) {

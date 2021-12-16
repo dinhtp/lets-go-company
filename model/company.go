@@ -1,14 +1,18 @@
 package model
 
 import (
-    "gorm.io/gorm"
+	"gorm.io/gorm"
+	"time"
 )
 
 type Company struct {
-    gorm.Model
-    Name      string
-    Phone     string
-    Email     string
-    Address   string
-    TaxNumber string
+	ID        uint
+	Name      string
+	Phone     string
+	Email     string
+	Address   string
+	TaxNumber string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
 }

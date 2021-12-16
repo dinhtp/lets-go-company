@@ -20,7 +20,6 @@ func CreateFakeCompany(db *gorm.DB) error {
             return err
         }
 
-        co.ID = uint(i)
         err = db.Create(&co).Error
         if nil != err {
             return err
