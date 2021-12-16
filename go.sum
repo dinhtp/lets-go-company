@@ -88,6 +88,8 @@ github.com/dinhtp/lets-go-pbtype v0.0.0-20210930162137-ddc65b2ad69b h1:upL7xxoxO
 github.com/dinhtp/lets-go-pbtype v0.0.0-20210930162137-ddc65b2ad69b/go.mod h1:fq/s6D5bYLI6W2NxGe2xa5dm2+zf7cdBpDmx1lvxZzw=
 github.com/dinhtp/lets-go-pbtype v0.0.0-20211001161303-f563aacac732 h1:vB7ScYsJjBTuaH0SXSwR4B/hpzNvkbT1834NMYXq9Ik=
 github.com/dinhtp/lets-go-pbtype v0.0.0-20211001161303-f563aacac732/go.mod h1:fq/s6D5bYLI6W2NxGe2xa5dm2+zf7cdBpDmx1lvxZzw=
+github.com/dinhtp/lets-go-pbtype v0.0.0-20211216090616-105b5f949208 h1:TRdXKAv/dXbffCXvBs0TrvLT52/C9zyj7n0nXTeYORo=
+github.com/dinhtp/lets-go-pbtype v0.0.0-20211216090616-105b5f949208/go.mod h1:fq/s6D5bYLI6W2NxGe2xa5dm2+zf7cdBpDmx1lvxZzw=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

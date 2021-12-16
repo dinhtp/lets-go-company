@@ -14,7 +14,7 @@ func Seed(db *gorm.DB) error {
 }
 
 func CreateFakeCompany(db *gorm.DB) error {
-    for i := 1; i <= 5; i++ {
+    for i := 1; i <= 10; i++ {
         co, err := FakeCompany()
         if nil != err {
             return err

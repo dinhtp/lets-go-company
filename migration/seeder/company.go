@@ -8,7 +8,7 @@ import (
 )
 
 type Company struct {
-    ID        uint
+    ID        uint   `faker:"-"`
     Name      string `faker:"domain_name"`
     Phone     string `faker:"toll_free_number"`
     Email     string `faker:"email"`

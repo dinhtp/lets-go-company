@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/bxcodec/faker/v3 v3.6.0
-	github.com/dinhtp/lets-go-pbtype v0.0.0-20211001161303-f563aacac732
+	github.com/dinhtp/lets-go-pbtype v0.0.0-20211216090616-105b5f949208
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gogo/protobuf v1.3.2
