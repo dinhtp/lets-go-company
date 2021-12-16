@@ -30,7 +30,7 @@ var grpcCmd = &cobra.Command{
 func init() {
     serveCmd.AddCommand(grpcCmd)
 
-    grpcCmd.Flags().StringP("backend", "", "core-tax-grpc-address", "gRPC address")
+    grpcCmd.Flags().StringP("backend", "", "grpc-address", "gRPC address")
     grpcCmd.Flags().StringP("mysqlDsn", "", "mysql-dsn", "mysql connection string")
 
     _ = viper.BindPFlag("backend", grpcCmd.Flags().Lookup("backend"))
