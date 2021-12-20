@@ -20,7 +20,8 @@ The company and employee ERD can be referred below:
             "email": "string",
             "address": "string",
             "tax_number": "string",
-            "total_employee": 0,
+            "total_employee": 0, // calculate the total employee
+            "total_project": 0, // calculate the total "active" project
             "created_at": "string",
             "updated_at": "string"
         }
@@ -42,7 +43,8 @@ The company and employee ERD can be referred below:
             "email": "string",
             "address": "string",
             "tax_number": "string",
-            "total_employee": 0,
+            "total_employee": 0, // calculate the total employee
+            "total_project": 0, // calculate the total "active" project
             "created_at": "string",
             "updated_at": "string"
         }
@@ -65,14 +67,15 @@ The company and employee ERD can be referred below:
             "email": "string",
             "address": "string",
             "tax_number": "string",
-            "total_employee": 0,
+            "total_employee": 0, // calculate the total employee
+            "total_project": 0, // calculate the total "active" project
             "created_at": "string",
             "updated_at": "string"
         }
 #### Delete a company by ID.
     - URL: [DELETE] {company_url}/go/company/{id}
     - Status: 200
-#### list a company by page, limit and filter by "name", "phone", "email"
+#### List a company by page, limit and filter by "name", "phone", "email"
     - URL: [GET] {company_url}/go/compannies
     - Query: ?page=0&limit=0&search_value=string&search_fields=name,phone,email
     - Response:
@@ -85,7 +88,6 @@ The company and employee ERD can be referred below:
                     "email": "string",
                     "address": "string",
                     "tax_number": "string",
-                    "total_employee": 0,
                     "created_at": "string",
                     "updated_at": "string"
                 },
@@ -162,7 +164,7 @@ The company and employee ERD can be referred below:
 #### Delete an employee by ID.
     - URL: [DELETE] {company_url}/go/employee/{id}
     - Status: 200
-#### list employee by company id, page, limit and filter by "name", "email"
+#### List employee by company id, page, limit and filter by "name", "email"
     - URL: [GET] {company_url}/go/company/{company_id}/employees
     - Query: ?page=0&limit=0&search_value=string&search_fields=name,email
     - Response:
