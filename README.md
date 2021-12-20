@@ -1,6 +1,6 @@
 # Let's GO Company
 
-## What to do
+## I. What to do
 In this service, you will develop a backend server side functions that handle the **company** and **employee** API
 resources.This service will contain 2 sub-services which are the Rest and gRPC service.
 Rest service will handle the http requests while gRPC will handle the rpc request to the API resources.
@@ -8,9 +8,9 @@ Rest service will handle the http requests while gRPC will handle the rpc reques
 The company and employee ERD can be referred below:
 ![company-employee ERD](./asset/company-employee.png)
 
-## API Output
-### Company API Output
-#### Get a company by ID.
+## II. API Output
+### 1. Company API Output
+#### 1.1. Get a company by ID.
     - URL: [GET] {company_url}/go/company/{id}
     - Response: 
         {
@@ -25,7 +25,7 @@ The company and employee ERD can be referred below:
             "created_at": "string",
             "updated_at": "string"
         }
-#### Create a company.
+#### 1.2. Create a company.
     - URL: [POST] {company_url}/go/company
     - Payload:
         {
@@ -48,7 +48,7 @@ The company and employee ERD can be referred below:
             "created_at": "string",
             "updated_at": "string"
         }
-#### Update a company by ID.
+#### 1.3. Update a company by ID.
     - URL: [PUT] {company_url}/go/company/{id}
     - Payload:
         {
@@ -72,10 +72,10 @@ The company and employee ERD can be referred below:
             "created_at": "string",
             "updated_at": "string"
         }
-#### Delete a company by ID.
+#### 1.4. Delete a company by ID.
     - URL: [DELETE] {company_url}/go/company/{id}
     - Status: 200
-#### List a company by page, limit and filter by "name", "phone", "email"
+#### 1.5. List a company by page, limit and filter by "name", "phone", "email"
     - URL: [GET] {company_url}/go/compannies
     - Query: ?page=0&limit=0&search_value=string&search_fields=name,phone,email
     - Response:
@@ -99,8 +99,8 @@ The company and employee ERD can be referred below:
             "limit": 0,
         }
 
-### Employee API Output
-#### Get an employee by ID.
+### 2. Employee API Output
+#### 2.1. Get an employee by ID.
     - URL: [GET] {company_url}/go/employee/{id}
     - Response:
         {
@@ -114,7 +114,7 @@ The company and employee ERD can be referred below:
             "created_at": "string",
             "updated_at": "string"
         }
-#### Create an employee for a specific company.
+#### 2.2. Create an employee for a specific company.
     - URL: [POST] {company_url}/go/company/{company_id}/employee
     - Payload:
         {
@@ -137,7 +137,7 @@ The company and employee ERD can be referred below:
             "created_at": "string",
             "updated_at": "string"
         }
-#### Update an employee by ID.
+#### 2.3. Update an employee by ID.
     - URL: [POST] {company_url}/go/employee/{id}
     - Payload:
         {
@@ -161,10 +161,10 @@ The company and employee ERD can be referred below:
             "created_at": "string",
             "updated_at": "string"
         }
-#### Delete an employee by ID.
+#### 2.4. Delete an employee by ID.
     - URL: [DELETE] {company_url}/go/employee/{id}
     - Status: 200
-#### List employee by company id, page, limit and filter by "name", "email"
+#### 2.5. List employee by company id, page, limit and filter by "name", "email"
     - URL: [GET] {company_url}/go/company/{company_id}/employees
     - Query: ?page=0&limit=0&search_value=string&search_fields=name,email
     - Response:
