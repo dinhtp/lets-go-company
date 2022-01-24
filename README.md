@@ -1,5 +1,6 @@
 # Let's GO Company
 
+
 ## I. What to do
 In this service, you will develop a backend server side functions that handle the **company** and **employee** API
 resources.This service will contain 2 sub-services which are the Rest and gRPC service.
@@ -7,6 +8,7 @@ Rest service will handle the http requests while gRPC will handle the rpc reques
 
 The company and employee ERD can be referred below:
 ![company-employee ERD](./asset/company-employee.png)
+
 
 ## II. API Output
 ### 1. Company API Output
