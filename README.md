@@ -77,7 +77,7 @@ The company and employee ERD can be referred below:
 #### 1.4. Delete a company by ID.
     - URL: [DELETE] {company_url}/go/company/{id}
     - Status: 200
-#### 1.5. List a company by page, limit and filter by "name", "phone", "email"
+#### 1.5. List a company by page, limit; filter by created_at and search by "name", "phone", "email"
     - URL: [GET] {company_url}/go/compannies
     - Query: ?page=0&limit=0&search_value=string&search_fields=name,phone,email
     - Response:
@@ -166,7 +166,7 @@ The company and employee ERD can be referred below:
 #### 2.4. Delete an employee by ID.
     - URL: [DELETE] {company_url}/go/employee/{id}
     - Status: 200
-#### 2.5. List employee by company id, page, limit and filter by "name", "email"
+#### 2.5. List employee by company id, page, limit; filter by created_at and search by "name", "email"
     - URL: [GET] {company_url}/go/company/{company_id}/employees
     - Query: ?page=0&limit=0&search_value=string&search_fields=name,email
     - Response:
